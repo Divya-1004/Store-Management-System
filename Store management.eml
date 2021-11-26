@@ -1,0 +1,491 @@
+MIME-Version: 1.0
+Date: Fri, 24 Jul 2020 11:10:17 +0530
+Message-ID: <CAEtnPPvNH9k1tHA9vDvD+mMM6eAA9cf5=XE768BA1EQsN9PO4g@mail.gmail.com>
+Subject: oops FULLY FINAL
+From: Divya Sivaraman <divyasivaraman10@gmail.com>
+To: Divya Sivaraman <divyasivaraman10@gmail.com>
+Content-Type: multipart/alternative; boundary="00000000000077e60405ab29680c"
+
+--00000000000077e60405ab29680c
+Content-Type: text/plain; charset="UTF-8"
+
+#include<iostream>
+#include<string.h>
+#include<conio.h>
+#include<math.h>
+#include<fstream>
+using namespace std;
+int i,n;
+ifstream fin;
+ofstream fout;
+fstream fio;
+void disp();
+class stock
+{
+char name[20],pass[10];
+float pr; int quant;
+public:
+void get();
+void get2();
+void show();
+    int stchk(char nm[30]);
+    void withd(int qty);
+    void refil(int qty);
+}st;
+void stock::withd(int qty)
+{
+if(quant>=qty)
+{
+quant-=qty;
+cout<<"\nStock updated.\n";
+cout<<"\nTotal price to be paid:"<<pr*qty;
+    }
+else
+  cout<<"\nInsufficient stock\n";
+   getch();
+}
+void stock::refil(int qty)
+{
+quant+=qty;
+cout<<"\n\nStock updated.";
+   getch();
+}
+int stock::stchk(char nm[30])
+{
+if(strcmp(nm,name)==0)
+return 0;
+else
+return 1;
+}
+void stock::get()
+{
+cin>>name>>pr>>quant;
+cout<<"\nEnter the password letter by letter";
+for(int z=0;z<5;z++)
+{
+cin>>pass[z];
+cout<<"\nEnter the password letter by letter";
+for(i=1;i<=(z+1);i++)
+{
+cout<<"*";
+}
+}
+if(strcmp(pass,"hello")==0)
+{
+    cout<<"\nCongrats!!Access Granted!!";
+cout<<"\nEnter the Name followed By the price and then by the quantity";
+cin>>name>>pr>>quant;
+}
+else
+cout<<"Access Denied!!";
+}
+void stock::get2()
+{
+cin>>name>>quant;
+}
+void stock::show()
+{
+cout<<"\n"<<name<<"\t\t"<<quant<<"\t\t"<<pr;
+}
+void addnew()
+{
+disp();
+getch();
+cout<<"\nEnter the No. of Products that you wish to add: ";
+    cin>>n;
+    if (n!=0)
+    {
+int j,l,sum=0;
+fout.open("shop.dat",ios::binary|ios::app);
+for(i=0;i<n;i++)
+{
+cout<<"\nInput the name, price and the quantity of item respectively\n";
+   st.get();
+   fout.write((char*)&st,sizeof(st));
+        cout<<"\n\nitem updated";
+cin.get();
+    }
+    cout<<"\nStock Updated!!";
+    fout.close();
+    cin.get();
+    disp();
+}
+else
+{
+fout.close();
+cin.get();
+cout<<"\n\nNo items to be added";
+}
+}
+void withdraw()
+{
+char temp[100];int qty;
+int i=0;
+long pos=0;
+disp();
+cout<<"\n\nEnter the product's name \n"<<endl;
+cin>>temp;
+cout<<"\n\nEnter quantity: \n"<<endl;
+cin>>qty;
+fio.open("shop.dat",ios::binary|ios::out|ios::in);
+     while(fio)
+     {
+   pos=fio.tellp();
+   fio.read((char*)&st,sizeof(st));
+   if(st.stchk(temp)==0)
+   {
+ st.withd(qty);
+ fio.seekp(pos);
+ fio.write((char*)&st,sizeof(st));
+ i++;break;
+   }
+     }
+     if(i!=1)
+       cout<<"\n\n!!Record not found!!";
+     fio.close();
+    cin.get();
+disp();
+getch();
+}
+void disp()
+{
+int i=1;
+cout<<"\n=================\tTHE STOCK ITEMS ARE\t==================";
+cout<<"\n\nPARTICULARS\tSTOCK AVAILABLE\t PRICE";
+fin.open("shop.dat",ios::binary);
+     while(!fin.eof())
+     {
+ fin.read((char*)&st,sizeof(st));
+ if(!fin.eof())
+ {
+    if(fin.tellg()<0)
+    { i=0; break;}
+    st.show();
+ }
+     }
+     if(i==0)
+     { cout<<"\n\n\t\t\t!!Empty record room!!";
+getch();
+     }
+     fin.close();
+
+}
+void refill()
+{
+char temp[100];int qty;
+int i=0;
+long pos=0;
+disp();
+cout<<"\n\nEnter the products name \n"<<endl;
+cin>>temp;
+cout<<"\n\nEnter quantity: \n"<<endl;
+cin>>qty;
+fio.open("shop.dat",ios::binary|ios::out|ios::in);
+     while(fio)
+     {
+   pos=fio.tellp();
+   fio.read((char*)&st,sizeof(st));
+   if(st.stchk(temp)==0)
+   {
+
+ st.refil(qty);
+ fio.seekp(pos);
+ fio.write((char*)&st,sizeof(st));
+ i++;break;
+   }
+     }
+     if(i!=1)
+       cout<<"\n\n!!Record not found!!";
+     fio.close();
+
+    cin.get();
+disp(); cin.get();
+}
+void remove()
+{
+int i=0;
+     char temp[30];
+     cout<<"\n\t\t\t\tDelete Record";
+     cout<<"\n\nEnter the name of the product:";
+     cin>>temp;
+     fout.open("temp.dat",ios::binary);
+     fin.open("shop.dat",ios::binary);
+     while(!fin.eof())
+     {
+ fin.read((char*)&st,sizeof(st));
+ if(!fin.eof())
+   if(st.stchk(temp)==0)
+   {
+ st.show();
+ cout<<"\n\n\t\tRecord deleted";
+ i++;
+   }
+   else
+ fout.write((char*)&st,sizeof(st));
+     }
+     if(i==0)
+       cout<<"\n\n!!Record not found!!";
+     fin.close();
+     fout.close();
+     remove("shop.dat");
+     rename("temp.dat","shop.dat");
+}
+int main()
+{
+char pass[7],pass2[10];
+int i,j;
+cout<<" WELCOME TO STORE MANAGEMENT ";
+getch();
+cout<<"STORE MANAGEMENT SYSTEM\n";
+cout<<"1. Dealer Menu\n2. Customer Menu\n3. Employee Menu";
+cout<<"\nEnter Your Choice:";
+cin>>j;
+if(j==1)
+{
+cout<<"\nEnter the password : ";
+cin>>pass;
+if(strcmp(pass,"dealer")==0)
+{
+dealermenu:
+cout<<"\n\tDEALER MENU\n1. Add new product\n2. Display stock\n3. Refill\n4.
+Remove an item\n5. Exit:";
+cout<<"\n\n\n==========================END OF
+MENU=============================";
+cout<<"\n\n Enter your Choice :\t";
+cin>>i;
+if(i==1)
+{
+addnew();getch();
+goto dealermenu;
+}
+else if(i==2)
+{
+
+disp();getch();goto dealermenu;
+}
+else if(i==3)
+{
+refill();goto dealermenu;
+}
+else if(i==4)
+{
+remove();getch();goto dealermenu;
+}
+else
+{
+getch();
+}
+}
+else
+{
+cout<<"\n\n\nAuthorised Person Only\n\n";
+getch();
+getch();
+getch();
+getch();
+getch();
+getch();
+}
+}
+if(j==2)
+{
+custmenu:
+cout<<"\n\tCUSTOMER MENU\n1. Purchase\n2. Display stock\n3. Exit:";
+cout<<"\n\n\n==========================END OF
+MENU=============================";
+cout<<"\n\n Enter your Choice :\t";
+cin>>i;
+if (i==1)
+{
+withdraw();getch();goto custmenu;
+}
+else if(i==2)
+{
+disp();getch();goto custmenu;
+}
+else
+{
+
+}
+
+}
+if(j==3)
+{
+cout<<"\nEnter the password letter by letter: ";
+for(int z=0;z<3;z++)
+{
+pass2[z]=getch();
+cout<<"\nEnter the password letter by letter: ";
+for(i=1;i<=(z+1);i++)
+{
+cout<<"*";
+}
+}
+if(strcmp(pass2,"emp")==0)
+{
+empmenu:
+cout<<"\nEMPLOYEE MENU\n1. Display stock\n2. Refill\n3. Exit";
+cout<<"\n\n\n==========================END OF
+MENU=============================";
+cout<<"\n\n Enter your Choice :\t";
+cin>>i;
+if(i==1)
+{
+disp();getch();goto empmenu;
+}
+else if(i==2)
+{
+refill();goto empmenu;
+}
+else
+{
+cout<<"\nThank You!!";
+getch();
+}
+}
+else
+{
+cout<<"\n\nSorry!! Access Denied..\n\n";
+getch();
+getch();
+getch();
+getch();
+getch();
+}
+}
+getch();
+}
+
+--00000000000077e60405ab29680c
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">#include&lt;iostream&gt;<br>#include&lt;string.h&gt;<br>#i=
+nclude&lt;conio.h&gt;<br>#include&lt;math.h&gt;<br>#include&lt;fstream&gt;<=
+br>using namespace std;<br>int i,n;<br>ifstream fin;<br>ofstream fout;<br>f=
+stream fio;<br>void disp();<br>class stock<br>{<br>char name[20],pass[10];<=
+br>float pr; int quant;<br>public:<br>void get();<br>void get2();<br>void s=
+how();<br>=C2=A0 =C2=A0 int stchk(char nm[30]);<br>=C2=A0 =C2=A0 void withd=
+(int qty);<br>=C2=A0 =C2=A0 void refil(int qty);<br>}st;<br>void stock::wit=
+hd(int qty)<br>{<br>if(quant&gt;=3Dqty)<br>{<br>quant-=3Dqty;<br>cout&lt;&l=
+t;&quot;\nStock updated.\n&quot;;<br>cout&lt;&lt;&quot;\nTotal price to be =
+paid:&quot;&lt;&lt;pr*qty;<br>=C2=A0 =C2=A0 }<br>else<br>=C2=A0 cout&lt;&lt=
+;&quot;\nInsufficient stock\n&quot;;<br>=C2=A0 =C2=A0getch();<br>}<br>void =
+stock::refil(int qty)<br>{<br>quant+=3Dqty;<br>cout&lt;&lt;&quot;\n\nStock =
+updated.&quot;;<br>=C2=A0 =C2=A0getch();<br>}<br>int stock::stchk(char nm[3=
+0])<br>{<br>if(strcmp(nm,name)=3D=3D0)<br>return 0;<br>else<br>return 1;<br=
+>}<br>void stock::get()<br>{<br>cin&gt;&gt;name&gt;&gt;pr&gt;&gt;quant;<br>=
+cout&lt;&lt;&quot;\nEnter the password letter by letter&quot;;<br>for(int z=
+=3D0;z&lt;5;z++)<br>{<br>cin&gt;&gt;pass[z];<br>cout&lt;&lt;&quot;\nEnter t=
+he password letter by letter&quot;;<br>for(i=3D1;i&lt;=3D(z+1);i++)<br>{<br=
+>cout&lt;&lt;&quot;*&quot;;<br>}<br>}<br>if(strcmp(pass,&quot;hello&quot;)=
+=3D=3D0)<br>{<br>=C2=A0 =C2=A0 cout&lt;&lt;&quot;\nCongrats!!Access Granted=
+!!&quot;;<br>cout&lt;&lt;&quot;\nEnter the Name followed By the price and t=
+hen by the quantity&quot;;<br>cin&gt;&gt;name&gt;&gt;pr&gt;&gt;quant;<br>}<=
+br>else<br>cout&lt;&lt;&quot;Access Denied!!&quot;;<br>}<br>void stock::get=
+2()<br>{<br>cin&gt;&gt;name&gt;&gt;quant;<br>}<br>void stock::show()<br>{<b=
+r>cout&lt;&lt;&quot;\n&quot;&lt;&lt;name&lt;&lt;&quot;\t\t&quot;&lt;&lt;qua=
+nt&lt;&lt;&quot;\t\t&quot;&lt;&lt;pr;<br>}<br>void addnew()<br>{<br>disp();=
+<br>getch();<br>cout&lt;&lt;&quot;\nEnter the No. of Products that you wish=
+ to add: &quot;;<br>=C2=A0 =C2=A0 cin&gt;&gt;n;<br>=C2=A0 =C2=A0 if (n!=3D0=
+)<br>=C2=A0 =C2=A0 {<br>int j,l,sum=3D0;<br>fout.open(&quot;shop.dat&quot;,=
+ios::binary|ios::app);<br>for(i=3D0;i&lt;n;i++)<br>{<br>cout&lt;&lt;&quot;\=
+nInput the name, price and the quantity of item respectively\n&quot;;<br>=
+=C2=A0 =C2=A0st.get();<br>=C2=A0 =C2=A0fout.write((char*)&amp;st,sizeof(st)=
+);<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 cout&lt;&lt;&quot;\n\nitem updated&quot;;=
+<br>cin.get();<br>=C2=A0 =C2=A0 }<br>=C2=A0 =C2=A0 cout&lt;&lt;&quot;\nStoc=
+k Updated!!&quot;;<br>=C2=A0 =C2=A0 fout.close();<br>=C2=A0 =C2=A0 cin.get(=
+);<br>=C2=A0 =C2=A0 disp();<br>}<br>else<br>{<br>fout.close();<br>cin.get()=
+;<br>cout&lt;&lt;&quot;\n\nNo items to be added&quot;;<br>}<br>}<br>void wi=
+thdraw()<br>{<br>char temp[100];int qty;<br>int i=3D0;<br>long pos=3D0;<br>=
+disp();<br>cout&lt;&lt;&quot;\n\nEnter the product&#39;s name \n&quot;&lt;&=
+lt;endl;<br>cin&gt;&gt;temp;<br>cout&lt;&lt;&quot;\n\nEnter quantity: \n&qu=
+ot;&lt;&lt;endl;<br>cin&gt;&gt;qty;<br>fio.open(&quot;shop.dat&quot;,ios::b=
+inary|ios::out|ios::in);<br>=C2=A0 =C2=A0 =C2=A0while(fio)<br>=C2=A0 =C2=A0=
+ =C2=A0{<br>=C2=A0 =C2=A0pos=3Dfio.tellp();<br>=C2=A0 =C2=A0fio.read((char*=
+)&amp;st,sizeof(st));<br>=C2=A0 =C2=A0if(st.stchk(temp)=3D=3D0)<br>=C2=A0 =
+=C2=A0{<br>=C2=A0st.withd(qty);<br>=C2=A0fio.seekp(pos);<br>=C2=A0fio.write=
+((char*)&amp;st,sizeof(st));<br>=C2=A0i++;break;<br>=C2=A0 =C2=A0}<br>=C2=
+=A0 =C2=A0 =C2=A0}<br>=C2=A0 =C2=A0 =C2=A0if(i!=3D1)<br>=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0cout&lt;&lt;&quot;\n\n!!Record not found!!&quot;;<br>=C2=A0 =C2=
+=A0 =C2=A0fio.close();<br>=C2=A0 =C2=A0 cin.get();<br>disp();<br>getch();<b=
+r>}<br>void disp()<br>{<br>int i=3D1;<br>cout&lt;&lt;&quot;\n=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\tTHE STOCK ITEMS ARE\t=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D&quot;;<br>cout&lt;&lt;&quot;\n\n=
+PARTICULARS\tSTOCK AVAILABLE\t PRICE&quot;;<br>fin.open(&quot;shop.dat&quot=
+;,ios::binary);<br>=C2=A0 =C2=A0 =C2=A0while(!fin.eof())<br>=C2=A0 =C2=A0 =
+=C2=A0{<br>=C2=A0fin.read((char*)&amp;st,sizeof(st));<br>=C2=A0if(!fin.eof(=
+))<br>=C2=A0{<br>=C2=A0 =C2=A0 if(fin.tellg()&lt;0)<br>=C2=A0 =C2=A0 { i=3D=
+0; break;}<br>=C2=A0 =C2=A0 st.show();<br>=C2=A0}<br>=C2=A0 =C2=A0 =C2=A0}<=
+br>=C2=A0 =C2=A0 =C2=A0if(i=3D=3D0)<br>=C2=A0 =C2=A0 =C2=A0{ cout&lt;&lt;&q=
+uot;\n\n\t\t\t!!Empty record room!!&quot;;<br>getch();<br>=C2=A0 =C2=A0 =C2=
+=A0}<br>=C2=A0 =C2=A0 =C2=A0fin.close();<br><br>}<br>void refill()<br>{<br>=
+char temp[100];int qty;<br>int i=3D0;<br>long pos=3D0;<br>disp();<br>cout&l=
+t;&lt;&quot;\n\nEnter the products name \n&quot;&lt;&lt;endl;<br>cin&gt;&gt=
+;temp;<br>cout&lt;&lt;&quot;\n\nEnter quantity: \n&quot;&lt;&lt;endl;<br>ci=
+n&gt;&gt;qty;<br>fio.open(&quot;shop.dat&quot;,ios::binary|ios::out|ios::in=
+);<br>=C2=A0 =C2=A0 =C2=A0while(fio)<br>=C2=A0 =C2=A0 =C2=A0{<br>=C2=A0 =C2=
+=A0pos=3Dfio.tellp();<br>=C2=A0 =C2=A0fio.read((char*)&amp;st,sizeof(st));<=
+br>=C2=A0 =C2=A0if(st.stchk(temp)=3D=3D0)<br>=C2=A0 =C2=A0{<br><br>=C2=A0st=
+.refil(qty);<br>=C2=A0fio.seekp(pos);<br>=C2=A0fio.write((char*)&amp;st,siz=
+eof(st));<br>=C2=A0i++;break;<br>=C2=A0 =C2=A0}<br>=C2=A0 =C2=A0 =C2=A0}<br=
+>=C2=A0 =C2=A0 =C2=A0if(i!=3D1)<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0cout&lt;&lt;&=
+quot;\n\n!!Record not found!!&quot;;<br>=C2=A0 =C2=A0 =C2=A0fio.close();<br=
+><br>=C2=A0 =C2=A0 cin.get();<br>disp(); cin.get();<br>}<br>void remove()<b=
+r>{<br>int i=3D0;<br>=C2=A0 =C2=A0 =C2=A0char temp[30];<br>=C2=A0 =C2=A0 =
+=C2=A0cout&lt;&lt;&quot;\n\t\t\t\tDelete Record&quot;;<br>=C2=A0 =C2=A0 =C2=
+=A0cout&lt;&lt;&quot;\n\nEnter the name of the product:&quot;;<br>=C2=A0 =
+=C2=A0 =C2=A0cin&gt;&gt;temp;<br>=C2=A0 =C2=A0 =C2=A0fout.open(&quot;temp.d=
+at&quot;,ios::binary);<br>=C2=A0 =C2=A0 =C2=A0fin.open(&quot;shop.dat&quot;=
+,ios::binary);<br>=C2=A0 =C2=A0 =C2=A0while(!fin.eof())<br>=C2=A0 =C2=A0 =
+=C2=A0{<br>=C2=A0fin.read((char*)&amp;st,sizeof(st));<br>=C2=A0if(!fin.eof(=
+))<br>=C2=A0 =C2=A0if(st.stchk(temp)=3D=3D0)<br>=C2=A0 =C2=A0{<br>=C2=A0st.=
+show();<br>=C2=A0cout&lt;&lt;&quot;\n\n\t\tRecord deleted&quot;;<br>=C2=A0i=
+++;<br>=C2=A0 =C2=A0}<br>=C2=A0 =C2=A0else<br>=C2=A0fout.write((char*)&amp;=
+st,sizeof(st));<br>=C2=A0 =C2=A0 =C2=A0}<br>=C2=A0 =C2=A0 =C2=A0if(i=3D=3D0=
+)<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0cout&lt;&lt;&quot;\n\n!!Record not found!!&=
+quot;;<br>=C2=A0 =C2=A0 =C2=A0fin.close();<br>=C2=A0 =C2=A0 =C2=A0fout.clos=
+e();<br>=C2=A0 =C2=A0 =C2=A0remove(&quot;shop.dat&quot;);<br>=C2=A0 =C2=A0 =
+=C2=A0rename(&quot;temp.dat&quot;,&quot;shop.dat&quot;);<br>}<br>int main()=
+<br>{<br>char pass[7],pass2[10];<br>int i,j;<br>cout&lt;&lt;&quot; WELCOME =
+TO STORE MANAGEMENT &quot;;<br>getch();<br>cout&lt;&lt;&quot;STORE MANAGEME=
+NT SYSTEM\n&quot;;<br>cout&lt;&lt;&quot;1. Dealer Menu\n2. Customer Menu\n3=
+. Employee Menu&quot;;<br>cout&lt;&lt;&quot;\nEnter Your Choice:&quot;;<br>=
+cin&gt;&gt;j;<br>if(j=3D=3D1)<br>{<br>cout&lt;&lt;&quot;\nEnter the passwor=
+d : &quot;;<br>cin&gt;&gt;pass;<br>if(strcmp(pass,&quot;dealer&quot;)=3D=3D=
+0)<br>{<br>dealermenu:<br>cout&lt;&lt;&quot;\n\tDEALER MENU\n1. Add new pro=
+duct\n2. Display stock\n3. Refill\n4. Remove an item\n5. Exit:&quot;;<br>co=
+ut&lt;&lt;&quot;\n\n\n=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3DEND OF MENU=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D&quot;;<br>cout&lt;&lt;&=
+quot;\n\n Enter your Choice :\t&quot;;<br>cin&gt;&gt;i;<br>if(i=3D=3D1)<br>=
+{<br>addnew();getch();<br>goto dealermenu;<br>}<br>else if(i=3D=3D2)<br>{<b=
+r><br>disp();getch();goto dealermenu;<br>}<br>else if(i=3D=3D3)<br>{<br>ref=
+ill();goto dealermenu;<br>}<br>else if(i=3D=3D4)<br>{<br>remove();getch();g=
+oto dealermenu;<br>}<br>else<br>{<br>getch();<br>}<br>}<br>else<br>{<br>cou=
+t&lt;&lt;&quot;\n\n\nAuthorised Person Only\n\n&quot;;<br>getch();<br>getch=
+();<br>getch();<br>getch();<br>getch();<br>getch();<br>}<br>}<br>if(j=3D=3D=
+2)<br>{<br>custmenu:<br>cout&lt;&lt;&quot;\n\tCUSTOMER MENU\n1. Purchase\n2=
+. Display stock\n3. Exit:&quot;;<br>cout&lt;&lt;&quot;\n\n\n=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND OF MENU=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D&quot;;<br>cout&lt;&lt;&quot;\n\n Enter your Choice :\t&quot;;<=
+br>cin&gt;&gt;i;<br>if (i=3D=3D1)<br>{<br>withdraw();getch();goto custmenu;=
+<br>}<br>else if(i=3D=3D2)<br>{<br>disp();getch();goto custmenu;<br>}<br>el=
+se<br>{<br><br>}<br><br>}<br>if(j=3D=3D3)<br>{<br>cout&lt;&lt;&quot;\nEnter=
+ the password letter by letter: &quot;;<br>for(int z=3D0;z&lt;3;z++)<br>{<b=
+r>pass2[z]=3Dgetch();<br>cout&lt;&lt;&quot;\nEnter the password letter by l=
+etter: &quot;;<br>for(i=3D1;i&lt;=3D(z+1);i++)<br>{<br>cout&lt;&lt;&quot;*&=
+quot;;<br>}<br>}<br>if(strcmp(pass2,&quot;emp&quot;)=3D=3D0)<br>{<br>empmen=
+u:<br>cout&lt;&lt;&quot;\nEMPLOYEE MENU\n1. Display stock\n2. Refill\n3. Ex=
+it&quot;;<br>cout&lt;&lt;&quot;\n\n\n=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND OF MENU=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D&quot;;<b=
+r>cout&lt;&lt;&quot;\n\n Enter your Choice :\t&quot;;<br>cin&gt;&gt;i;<br>i=
+f(i=3D=3D1)<br>{<br>disp();getch();goto empmenu;<br>}<br>else if(i=3D=3D2)<=
+br>{<br>refill();goto empmenu;<br>}<br>else<br>{<br>cout&lt;&lt;&quot;\nTha=
+nk You!!&quot;;<br>getch();<br>}<br>}<br>else<br>{<br>cout&lt;&lt;&quot;\n\=
+nSorry!! Access Denied..\n\n&quot;;<br>getch();<br>getch();<br>getch();<br>=
+getch();<br>getch();<br>}<br>}<br>getch();<br>}<br><div><br></div></div>
+
+--00000000000077e60405ab29680c--
